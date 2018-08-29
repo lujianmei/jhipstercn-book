@@ -1,0 +1,81 @@
+#+TITLE: 安装Taskjuggler
+#+LANGUAGE:  zh
+#+AUTHOR: Lu Jianmei
+#+EMAIL: lu.jianmei@trs.com.cn
+#+OPTIONS:   H:4 num:t   toc:3 \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t p:t pri:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+OPTIONS:   author:t creator:t timestamp:t email:t
+#+DESCRIPTION: A notes that include all works and study things in 2015
+#+KEYWORDS:  org-mode Emacs jquery jquery.mobile jquery.ui wcm
+#+INFOJS_OPT: view:nil toc:t ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+startup: beamer
+#+LATEX_CLASS: beamer
+#+BEAMER_FRAME_LEVEL: 2
+#+LaTeX_CLASS_OPTIONS: [xcolor=svgnames,bigger,presentation]
+#+LATEX_HEADER:\usecolortheme[named=FireBrick]{structure}\setbeamercovered{transparent}\setbeamertemplate{caption}[numbered]\setbeamertemplate{blocks}[rounded][shadow=true] \usetheme{Darmstadt} \usepackage{tikz}\usepackage{xeCJK}\usepackage{amsmath}\setmainfont{Times New Roman}\setCJKmainfont[BoldFont={AR PL SungtiL GB},ItalicFont={AR PL SungtiL GB}]{AR PL SungtiL GB}\setCJKsansfont{AR PL SungtiL GB}\setCJKmonofont{AR PL SungtiL GB}\usepackage{verbatim}\institute{beamerinstitute} \graphicspath{{figures/}} \definecolor{lstbgcolor}{rgb}{0.9,0.9,0.9} \usepackage{listings} \usepackage{fancyvrb}\usepackage{xcolor}\lstset{escapeinside=`',frameround=ftft,language=C,breaklines=true,keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,backgroundcolor=\color{yellow!20},rulesepcolor=\color{red!20!green!20!blue!20}}
+
+#+ATTR_HTML: :border 2 :rules all :frame all
+
+* Taskjuggler安装
+  本书以Taskjuggler3.5.0版本为基础，它使用Ruby进行开发，因此安装它之前需要先安装Ruby环境，需要的Ruby为至少2.0以上。
+
+** Ruby安装
+
+*** 软件安装
+   + Windows
+     打开下载地址：http://dl.bintray.com/oneclick/rubyinstaller/rubyinstaller-2.2.3.exe， 下载最新的ruby安装包，这里下载的是
+   + Linux
+     在Linux上不同的软件管理都有不同的安装命令，这里给出几种常用的在线安装方式
+#+begin_src sh
+     // Archlinux
+     sudo pacman -S ruby
+     // Fedora, Redhat
+     sudo yum install ruby
+     // Ubuntu, Debain
+     sudo apt-get install ruby
+#+end_src
+   + MacOS
+     MacOS中可以使用brew来进行安装，而对于brew的安装，用户可以网上搜索找到相关的信息，安装完成brew后，可以在终端内，用以下命令则可以安装：
+#+begin_src sh
+   brew install ruby
+#+end_src
+   + 编译安装
+     另外可以直接在除Windows平台上，采用源码编译安装的方式。
+     首先先下载源码包：https://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.3.tar.gz， 然后解压进入编译安装，Linux和MacOS的编译安装方式命令都相同：
+#+begin_src sh
+   tar xvf ruby-2.2.3.tar.gz
+   cd ruby-2.2.3
+   ./configure
+   make && make install
+#+end_src
+
+*** 安装完成验证
+   安装完成后，需要对Ruby进行一下安装成功与否的验证，验证方法如下：
+   Windows打开cmd，Linux和MacOS可以打开终端，执行如下命令：
+#+begin_src sh
+    ruby -version
+#+end_src
+     如果正常打印出如下版本信息，则说明Ruby安装成功。
+file:./images/ruby-version.png
+
+*** 配置Ruby的gem环境
+    由于ruby的在线安装源在国内访问不了，因此需要将软件源更新为国内的，我们选择使用Taobao的Ruby软件源，因此需要在安装完成Ruby后，修改掉官方提供的软件更新源，具体更新办法如下：（Windows打开cmd, Linux和MacOS打开终端）
+#+begin_src sh
+    gem sources --remove https://rubygems.org/
+    gem sources -a https://ruby.taobao.org/
+    gem sources -l
+#+end_src
+
+** Taskjuggler安装
+   安装完成Ruby后，则可以直接使用gem进行在线安装最新版本的Taskjuggler，依然是Windows打开cmd, Linux和MacOS打开终端：
+#+begin_src sh
+   gem install taskjuggler
+#+end_src
+   安装完成后，使用如下命令验证是否安装成功：
+#+begin_src sh
+   tj3 -version
+#+end_src
+   打印出如下taskjuggler的版本信息，则说明安装成功。
+file:./images/taskjuggler-version.png

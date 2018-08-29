@@ -1,0 +1,117 @@
+#+TITLE: 基本概念
+#+LANGUAGE:  zh
+#+AUTHOR: Lu Jianmei
+#+EMAIL: lu.jianmei@trs.com.cn
+#+OPTIONS:   H:4 num:t   toc:3 \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t p:t pri:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+OPTIONS:   author:t creator:t timestamp:t email:t
+#+DESCRIPTION: A notes that include all works and study things in 2015
+#+KEYWORDS:  org-mode Emacs jquery jquery.mobile jquery.ui wcm
+#+INFOJS_OPT: view:nil toc:t ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+startup: beamer
+#+LATEX_CLASS: beamer
+#+BEAMER_FRAME_LEVEL: 2
+#+LaTeX_CLASS_OPTIONS: [xcolor=svgnames,bigger,presentation]
+#+LATEX_HEADER:\usecolortheme[named=FireBrick]{structure}\setbeamercovered{transparent}\setbeamertemplate{caption}[numbered]\setbeamertemplate{blocks}[rounded][shadow=true] \usetheme{Darmstadt} \usepackage{tikz}\usepackage{xeCJK}\usepackage{amsmath}\setmainfont{Times New Roman}\setCJKmainfont[BoldFont={AR PL SungtiL GB},ItalicFont={AR PL SungtiL GB}]{AR PL SungtiL GB}\setCJKsansfont{AR PL SungtiL GB}\setCJKmonofont{AR PL SungtiL GB}\usepackage{verbatim}\institute{beamerinstitute} \graphicspath{{figures/}} \definecolor{lstbgcolor}{rgb}{0.9,0.9,0.9} \usepackage{listings} \usepackage{fancyvrb}\usepackage{xcolor}\lstset{escapeinside=`',frameround=ftft,language=C,breaklines=true,keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,backgroundcolor=\color{yellow!20},rulesepcolor=\color{red!20!green!20!blue!20}}
+
+#+ATTR_HTML: :border 2 :rules all :frame all
+
+* Taskjuggler基本概念
+  Taskjuggler使用一个或多个文本文件来描述一个项目，当一个项目被拆分为多个文件时，最主要的文件名称的后缀必须为 *.tjp* ，而这个主要文件内，可以引入其它多个文件，被引入的文件必须采用 *.tji* 后缀。在主要项目文件中，可以采用如 *include "inner.tji"* 的方式引入一个或多个文件。
+  目前最新的3.5版本中，只能采用命令行的方式使用，因此需要我们选择一个自己习惯使用的编辑器来编写项目即可，然后通过简单的命令来编译完成的项目文件，最终可以生成其它的格式以查看相应的项目报告。
+  说到编译，实际我们在完成项目文件后，即完成一个 *.tjp* 和其它多个 *.tji* 文件后，可以在当前目录下，打开 *cmd* 或终端，执行一下编译命令。比如我们的项目文件名称叫 *main.tjp* ,因此编译命令则为：
+#+begin_src sh
+    tj3 main.tjp
+#+end_src
+  以上编译命令，会让taskjuggler来自动对多个文件进行合并计算，Taskjuggler会自动安排所有任务的特殊条件，遇到错误后会提示编译失败的原因，并最终在编译通过后，成功输出文件，如HTML格式的项目报告。文件会最终输出在 *tjp* 所在的相同目录下。
+
+* TJP文件结构
+** 主要关键字清单
+   + project
+   + macros
+   + flags
+   + accounts
+   + shifts
+   + vacations
+   + resources
+   + tasks
+   + accountreports
+   + resourcereports
+   + taskreports
+   + textreports
+   + exports
+   本章我们将先从了解Taskjuggler的主要关键词开始逐一展开 。
+** 项目定义
+   一个项目首先开始的，是定义它的项目属性，所用到的关键字为 *project* 。这里我们从一个例子开始：
+#+begin_src sh
+语法：
+project <Project Name> Start-Date End-Date {
+  <Attributes>
+}
+例子：
+project "Example Project" 2015-11-18 +2m {
+  timezone "China/Shanghai"
+}
+
+#+end_src
+   通过 *project* 关键字，我们需要定义项目的名称，项目的开始时间，结束时间，其中结束时间可以采用一个时间段的格式来定义，后面我们会专门有一节对多种时间格式定义来说明。Fn[1] 请查看第n节。
+   项目大括号中可以对项目的时间格式、数字格式、货币格式、时区、假期、工作日、工作日中工作时间等等属性进行预定义，以满足不同的需求，当然当涉及到多个跨时区或跨国家团队共同工作时，这里也可以针对某一个团队或者某一些任务进行分别定义。给项目团队的管理带来及大的灵活性，从而满足各种项目背影下的管理需求。
+   本书后面章节会逐一讲到针对不同的项目场景列举到的不同例子，以提供大家理解及实际应用。
+
+** 宏变量
+   宏变量macros用于定义一些类似常量的值，定义一段可以被重复引用的文本段，它的定义格式为：
+#+begin_src sh
+   语法： macros <Specific ID> <MACROS>
+   例子： macros allocateGroupID [ allocate John, Real ]
+   引用： ${allocateGroupID}
+#+end_src
+   在项目之前定义好宏变量后，可以在项目的任何合适的位置，通过以 *${allcateGroupID}* 来引用这个宏变量，在编译项目文档时，宏变量将会被定义在中括号中的内容替换掉。
+   宏变量的另一种方式可以对其内容主体输入参数，以满足不同变量场景的情况下的引用。它的定义格式为：
+#+begin_src sh
+   语法： macros <Specific ID> <MACROS>
+   例子： macros allocateGroup2 [ allocate ${1}, ${2}, Tim]
+   引用： ${allocateGroup2 "John" "Real"}
+#+end_src
+   这样宏变量将会在引用的时候，通过动态输入参数来替换宏变量中定义的变量值。
+   另外，宏变量可以中可以引用其它的宏变量，比如
+#+begin_src sh
+macros devGroup [ John, Tim, Tex]
+macros testGroup [ Jean, Oreal, Rubean]
+macros allocateGroup3 [ allocate ${?devGroup} ${?testGroup} ]
+#+end_src
+   可以看到必须将被引用的宏变量定义在引用之前；且在引用的变量前需要有一个问号。当其中的变量发现未被提前定义时，此变量将不被引用。
+   宏变量及大的方便了我们定义项目中的各种资源、任务、文本等内容，可以简化项目定义时的重复内容，也更方便在项目运行期时，其中的某些内容的变化的及时更新。
+
+** 标签
+   标签flags关键词，主要用于定义任务、资源、或其它属性时用于特殊标识，以至于我们可以利用它来过滤我们想要的内容，从而生成不同需求的项目报告。
+#+begin_src sh
+   语法： flag <ID> [, <IDs>...]
+   例子： flag devTasks
+#+end_src
+   如上面的例子，我们在 *task* 任务中定义一个类似的 *flag* , 这样我们可以在项目报告中，统计所有 *devTasks* 的任务相关属性，如任务的完成情况。后面在讲解项目报告时，会结合 *flag* 标签来完成一定目标的项目报告。
+
+** 账户
+
+** 资源借用
+
+** 假期设置
+
+** 资源池配置
+
+** 任务列表
+
+** 项目成本报告
+
+** 项目资源报告
+
+** 项目任务报告
+
+** 文本报告
+
+** 项目导出
+
+* 概念
+** 里程碑
+   里程碑中不包含时间周期，只需要定义它的 depends 任务即可；
